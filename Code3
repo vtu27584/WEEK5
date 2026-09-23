@@ -1,0 +1,64 @@
+import java.io.*;
+import java.util.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.toList;
+
+public class Code3 {
+
+    public static List<Integer> maxSubarray(List<Integer> arr) {
+        // 1. Calculate Maximum Subarray Sum (Kadane's Algorithm)
+        int maxSubarray = arr.get(0);
+        int currentMax = arr.get(0);
+        
+        for (int i = 1; i < arr.size(); i++) {
+            currentMax = Math.max(arr.get(i), currentMax + arr.get(i));
+            maxSubarray = Math.max(maxSubarray, currentMax);
+        }
+        
+        // 2. Calculate Maximum Subsequence Sum
+        int maxSubsequence = 0;
+        int maxElement = arr.get(0);
+        boolean hasPositive = false;
+        
+        for (int num : arr) {
+            if (num > 0) {
+                maxSubsequence += num;
+                hasPositive = true;
+            }
+            if (num > maxElement) {
+                maxElement = num;
+            }
+        }
+        
+        // If all numbers are negative, pick the largest single negative value
+        if (!hasPositive) {
+            maxSubsequence = maxElement;
+        }
+        
+        return List.of(maxSubarray, maxSubsequence);
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        
+        // Read number of test cases
+        int t = Integer.parseInt(bufferedReader.readLine().trim());
+        
+        for (int tItr = 0; tItr < t; tItr++) {
+            // Read size of the array (n)
+            int n = Integer.parseInt(bufferedReader.readLine().trim());
+            
+            // Read the array elements
+            List<Integer> arr = Stream.of(bufferedReader.readLine().replaceAll("\\s+$", "").split(" "))
+                .map(Integer::parseInt)
+                .collect(toList());
+            
+            List<Integer> result = maxSubarray(arr);
+            
+            // Print the result as space-separated integers on a single line
+            System.out.println(result.get(0) + " " + result.get(1));
+        }
+        
+        bufferedReader.close();
+    }
+}

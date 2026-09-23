@@ -1,0 +1,22 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Code9
+{
+    public List<String> stringMatching(String[] words) {
+        List<String> result = new ArrayList<>();
+        
+        // Iterate through each word to check if it's a substring of any other word
+        for (int i = 0; i < words.length; i++) {
+            for (int j = 0; j < words.length; j++) {
+                // Ensure we don't compare the word with itself
+                if (i != j && words[j].contains(words[i])) {
+                    result.add(words[i]);
+                    break; // Move to the next word immediately to avoid duplicates
+                }
+            }
+        }
+        
+        return result;
+    }
+}

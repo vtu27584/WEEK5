@@ -1,0 +1,29 @@
+class Code4 {
+    public int maxSubarraySumCircular(int[] nums) {
+        int totalSum = 0;
+        int max_normal = nums[0];
+        int min_normal = nums[0];
+        int currentMax = 0;
+        int currentMin = 0;
+
+        for (int num : nums) {
+            totalSum += num;
+
+            // Standard Kadane's to find maximum subarray sum
+            currentMax = Math.max(num, currentMax + num);
+            max_normal = Math.max(max_normal, currentMax);
+
+            // Modified Kadane's to find minimum subarray sum
+            currentMin = Math.min(num, currentMin + num);
+            min_normal = Math.min(min_normal, currentMin);
+        }
+
+        // If all numbers are negative, max_normal is the answer
+        if (max_normal < 0) {
+            return max_normal;
+        }
+
+        // Return the maximum of wrapped and non-wrapped subarrays
+        return Math.max(max_normal, totalSum - min_normal);
+    }
+}

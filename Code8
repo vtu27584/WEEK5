@@ -1,0 +1,30 @@
+import java.util.Arrays;
+
+class Code6 {
+    public int lengthOfLongestSubstring(String s) {
+        // Array to store the last seen index of each character (ASCII)
+        int[] lastSeen = new int[128];
+        Arrays.fill(lastSeen, -1);
+        
+        int maxLength = 0;
+        int left = 0; // Left boundary of the sliding window
+        
+        for (int right = 0; right < s.length(); right++) {
+            char currentChar = s.charAt(right);
+            
+            // If the character was already seen inside the current window,
+            // move the left boundary right past its previous occurrence
+            if (lastSeen[currentChar] >= left) {
+                left = lastSeen[currentChar] + 1;
+            }
+            
+            // Update the maximum length found so far
+            maxLength = Math.max(maxLength, right - left + 1);
+            
+            // Record or update the current character's index
+            lastSeen[currentChar] = right;
+        }
+        
+        return maxLength;
+    }
+}

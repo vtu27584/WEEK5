@@ -1,0 +1,86 @@
+import java.util.*;
+
+public class Code2{
+    
+    static class Hacker {
+        int id;
+        String name;
+        int challengeCount = 0;
+
+        Hacker(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        // 1. Read Hackers Table Data
+        if (!sc.hasNextInt()) return;
+        int numHackers = sc.nextInt();
+        List<Hacker> hackersList = new ArrayList<>();
+        Map<Integer, Hacker> hackerMap = new HashMap<>();
+        
+        for (int i = 0; i < numHackers; i++) {
+            int id = sc.nextInt();
+            String name = sc.next(); // Reads a single word name as shown in samples
+            Hacker h = new Hacker(id, name);
+            hackersList.add(h);
+            hackerMap.put(id, h);
+        }
+
+        // 2. Read Challenges Table Data
+        if (!sc.hasNextInt()) return;
+        int numChallenges = sc.nextInt();
+        
+        for (int i = 0; i < numChallenges; i++) {
+            int challengeId = sc.nextInt();
+            int hackerId = sc.nextInt();
+            if (hackerMap.containsKey(hackerId)) {
+                hackerMap.get(hackerId).challengeCount++;
+            }
+        }
+        sc.close();
+
+        // 3. Calculate Maximum Challenges
+        int maxChallenges = 0;
+        for (Hacker h : hackersList) {
+            if (h.challengeCount > maxChallenges) {
+                maxChallenges = h.challengeCount;
+            }
+        }
+
+        // 4. Count Frequency of Each Challenge Count Group
+        Map<Integer, Integer> countFrequency = new HashMap<>();
+        for (Hacker h : hackersList) {
+            countFrequency.put(h.challengeCount, countFrequency.getOrDefault(h.challengeCount, 0) + 1);
+        }
+
+        // 5. Filter Hackers Based on Problem Constraints
+        List<Hacker> filteredHackers = new ArrayList<>();
+        for (Hacker h : hackersList) {
+            // Exclusion rule: Exclude if more than one hacker has this 
+            int freq = countFrequency.get(h.challengeCount);
+            if (h.challengeCount == maxChallenges || freq == 1) {
+                filteredHackers.add(h);
+            }
+        }
+
+        // 6. Sort: Descending by challenge count, Ascending by hacker_id
+        Collections.sort(filteredHackers, new Comparator<Hacker>() {
+            @Override
+            public int compare(Hacker h1, Hacker h2) {
+                if (h2.challengeCount != h1.challengeCount) {
+                    return Integer.compare(h2.challengeCount, h1.challengeCount);
+                }
+                return Integer.compare(h1.id, h2.id);
+            }
+        });
+
+        // 7. Print Final Output matching Sample Cases
+        for (Hacker h : filteredHackers) {
+            System.out.println(h.id + " " + h.name + " " + h.challengeCount);
+        }
+    }
+}
